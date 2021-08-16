@@ -26,7 +26,8 @@ def convert():
     raw_file.save(HOMEDIR / "uploads" / filename)
 
     quizfile = f"{filename[:filename.find('.csv')]}.pptx"
-    quiz = quizmaker.build_quiz(HOMEDIR / "static/pptx_template.pptx", HOMEDIR / "uploads" / filename)
-    quiz.save(HOMEDIR / "output" / quizfile)
+    return str(quizmaker.import_questions(HOMEDIR / "uploads" / filename))
+    # quiz = quizmaker.build_quiz(HOMEDIR / "static/pptx_template.pptx", HOMEDIR / "uploads" / filename)
+    # quiz.save(HOMEDIR / "output" / quizfile)
 
-    return send_from_directory(HOMEDIR / "output", quizfile, as_attachment=True)
+    # return send_from_directory(HOMEDIR / "output", quizfile, as_attachment=True)
