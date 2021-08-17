@@ -2,6 +2,7 @@ import csv
 import sys
 
 from pptx import Presentation
+from pptx.dml.color import RGBColor
 
 TITLE = 0
 RULES = 1
@@ -43,26 +44,44 @@ def build_round(prs, number, data, audio=False):
             slide.placeholders[10].text = data[f"R{number}Q{q}"]
             #slide.placeholders[10].text_frame.fit_text(max_size=60)
         prs.slides.add_slide(prs.slide_layouts[bumpers.pop()])
-        # Answer 1-4
+        # Answers 1-4
         slide = prs.slides.add_slide(prs.slide_layouts[ANSWERS_1])
         slide.placeholders[0].text = f"Round {number} Answers"
-        p = 10
-        for q in range(1, 5):
-            q_pholder = p
-            a_pholder = p + 1
-            slide.placeholders[q_pholder].text = f"Q{q}: " + data[f"R{number}Q{q}"]
-            slide.placeholders[a_pholder].text = f"A{q}: " + data[f"R{number}A{q}"]
-            p += 2
+        tf = slide.placeholders[10].text_frame
+        tf.paragraphs[0].text = f"Q1: {data[f'R{number}Q1']}"
+        p = tf.add_paragraph()
+        run = p.add_run()
+        run.text = f"A1: {data[f'R{number}A1']}"
+        run.font.bold = True
+        run.font.color.rgb = RGBColor(25, 217, 203)
+        for q in range(2, 5):
+            p = tf.add_paragraph()
+            run = p.add_run()
+            run.text = f"Q{q}: {data[f'R{number}Q{q}']}"
+            p = tf.add_paragraph()
+            run = p.add_run()
+            run.text = f"A{q}: {data[f'R{number}A{q}']}"
+            run.font.bold = True
+            run.font.color.rgb = RGBColor(25, 217, 203)
         # Answers 5-7
         slide = prs.slides.add_slide(prs.slide_layouts[ANSWERS_2])
         slide.placeholders[0].text = f"Round {number} Answers (cont.)"
-        p = 10
-        for q in range(5, 8):
-            question = p
-            answer = p + 1
-            slide.placeholders[question].text = f"Q{q}: " + data[f"R{number}Q{q}"]
-            slide.placeholders[answer].text = f"A{q}: " + data[f"R{number}A{q}"]
-            p += 2
+        tf = slide.placeholders[10].text_frame
+        tf.paragraphs[0].text = f"Q5: {data[f'R{number}Q5']}"
+        p = tf.add_paragraph()
+        run = p.add_run()
+        run.text = f"A5: {data[f'R{number}A5']}"
+        run.font.bold = True
+        run.font.color.rgb = RGBColor(25, 217, 203)
+        for q in range(6, 8):
+            p = tf.add_paragraph()
+            run = p.add_run()
+            run.text = f"Q{q}: {data[f'R{number}Q{q}']}"
+            p = tf.add_paragraph()
+            run = p.add_run()
+            run.text = f"A{q}: {data[f'R{number}A{q}']}"
+            run.font.bold = True
+            run.font.color.rgb = RGBColor(25, 217, 203)
 
 
 def build_quiz(template, data):
