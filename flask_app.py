@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from flask import Flask, render_template, request, send_from_directory
+from flask import Flask, json, render_template, request, send_from_directory
 from werkzeug.utils import secure_filename
 
 import quizmaker
@@ -12,7 +12,8 @@ HOMEDIR = Path(__file__).parent
 
 @app.route('/')
 def form():
-    return render_template("home.html")
+    changelog = json.load(open(Path(HOMEDIR / "CHANGELOG")))
+    return render_template("home.html", changelog=changelog)
 
 @app.route('/download', methods=["POST"])
 def convert():

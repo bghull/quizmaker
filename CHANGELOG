@@ -1,0 +1,15 @@
+{
+  "2021-08-18": [
+    {
+      "Text in the 'Notes' column of the .csv are now inputted to the speaker notes of each relevant slide.": "https://github.com/bghull/quizmaker/issues/2#issuecomment-901124147"
+    },
+    {
+      "Answer slides are reverted to one large text box, where line breaks separate question/answer pairs and answers are bolded/accent-colored.": "https://github.com/bghull/quizmaker/issues/1#issuecomment-900770592"
+    }
+  ],
+  "2021-08-16": [
+    {
+      "Initial release.": "https://github.com/bghull/quizmaker/commit/6d608892c8097d85d6737b7c2cde59c9b6b79b81"
+    }
+  ]
+}
