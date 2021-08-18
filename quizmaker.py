@@ -3,6 +3,7 @@ import sys
 
 from pptx import Presentation
 from pptx.enum.dml import MSO_THEME_COLOR
+from pptx.util import Pt
 
 TITLE = 0
 RULES = 1
@@ -61,6 +62,7 @@ def build_round(prs, number, data, audio=None):
             else:
                 run.text = f"A{q}: {data[f'R{number}A{q}']}\n"
             run.font.bold = True
+            run.font.size = Pt(36)
             run.font.color.theme_color = MSO_THEME_COLOR.ACCENT_1
         # Answers 5-7
         slide = prs.slides.add_slide(prs.slide_layouts[ANSWERS_2])
@@ -80,6 +82,7 @@ def build_round(prs, number, data, audio=None):
             else:
                 run.text = f"A{q}: {data[f'R{number}A{q}']}\n"
             run.font.bold = True
+            run.font.size = Pt(36)
             run.font.color.theme_color = MSO_THEME_COLOR.ACCENT_1
 
 def build_quiz(template, data):
