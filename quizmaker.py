@@ -3,6 +3,8 @@ import sys
 from pprint import pprint
 
 from pptx import Presentation
+from pptx.enum.dml import MSO_THEME_COLOR
+from pptx.util import Pt
 
 TITLE = 0
 RULES = 1
@@ -38,50 +40,66 @@ except Exception as exc:
     print("Incorrect format:", exc)
 
 
-def build_round(prs, r, data, audio=False):
+def build_round(prs, number, data, audio=None):
     global bumpers
     slide = prs.slides.add_slide(prs.slide_layouts[ROUND_START])
-    slide.placeholders[0].text = f"Round {r}"
-    slide.placeholders[10].text = data[f"R{r}C"]["Text"]
-    slide.placeholders[11].text = data[f"R{r}D"]["Text"]
-    #slide.placeholders[11].text_frame.fit_text(max_size=28)
-    if audio: # No questions on audio rounds
+    slide.placeholders[0].text = f"Round {number}"
+    slide.placeholders[10].text = data[f"R{number}C"]
+    slide.placeholders[11].text = data[f"R{number}D"]
+    if audio: # No question slides for audio rounds
         prs.slides.add_slide(prs.slide_layouts[bumpers.pop()])
         slide = prs.slides.add_slide(prs.slide_layouts[ANSWERS_AUDIO])
-        slide.placeholders[0].text = f"Round {r} Answers"
+        slide.placeholders[0].text = f"Round {number} Answers"
         for a in range(1, 8):
-            slide.placeholders[a + 9].text = f"A{a}: " + data[f"R{r}A{a}"]["Text"]
-    # Normal round questions
+            slide.placeholders[a + 9].text = f"A{a}: " + data[f"R{number}A{a}"]
     else:
+        # Questions
         for q in range(1, 8):
             slide = prs.slides.add_slide(prs.slide_layouts[QUESTION])
             slide.placeholders[0].text = f"Question {q}"
-            slide.placeholders[10].text = data[f"R{r}Q{q}"]["Text"]
-            slide.notes_slide.notes_text_frame.text = data[f"R{r}Q{q}"]["Notes"]
+            slide.placeholders[10].text = data[f"R{number}Q{q}"]
             #slide.placeholders[10].text_frame.fit_text(max_size=60)
         prs.slides.add_slide(prs.slide_layouts[bumpers.pop()])
-        # Answer 1-4
+        # Answers 1-4
         slide = prs.slides.add_slide(prs.slide_layouts[ANSWERS_1])
-        slide.placeholders[0].text = f"Round {r} Answers"
-        p = 10
+        slide.placeholders[0].text = f"Round {number} Answers"
+        tf = slide.placeholders[10].text_frame
         for q in range(1, 5):
-            q_pholder = p
-            a_pholder = p + 1
-            slide.placeholders[q_pholder].text = f"Q{q}: " + data[f"R{r}Q{q}"]["Text"]
-            slide.placeholders[a_pholder].text = f"A{q}: " + data[f"R{r}A{q}"]["Text"]
-            slide.notes_slide.notes_text_frame.text = None
-            p += 2
+            if q == 1:
+                tf.paragraphs[0].text = f"Q{q}: {data[f'R{number}Q{q}']}"
+            else:
+                p = tf.add_paragraph()
+                run = p.add_run()
+                run.text = f"Q{q}: {data[f'R{number}Q{q}']}"
+            p = tf.add_paragraph()
+            run = p.add_run()
+            if q == 4:
+                run.text = f"A{q}: {data[f'R{number}A{q}']}"
+            else:
+                run.text = f"A{q}: {data[f'R{number}A{q}']}\n"
+            run.font.bold = True
+            run.font.size = Pt(36)
+            run.font.color.theme_color = MSO_THEME_COLOR.ACCENT_1
         # Answers 5-7
         slide = prs.slides.add_slide(prs.slide_layouts[ANSWERS_2])
-        slide.placeholders[0].text = f"Round {r} Answers (cont.)"
-        p = 10
+        slide.placeholders[0].text = f"Round {number} Answers (cont.)"
+        tf = slide.placeholders[10].text_frame
         for q in range(5, 8):
-            question = p
-            answer = p + 1
-            slide.placeholders[question].text = f"Q{q}: " + data[f"R{r}Q{q}"]["Text"]
-            slide.placeholders[answer].text = f"A{q}: " + data[f"R{r}A{q}"]["Text"]
-            p += 2
-
+            if q == 5:
+                tf.paragraphs[0].text = f"Q{q}: {data[f'R{number}Q{q}']}"
+            else:
+                p = tf.add_paragraph()
+                run = p.add_run()
+                run.text = f"Q{q}: {data[f'R{number}Q{q}']}"
+            p = tf.add_paragraph()
+            run = p.add_run()
+            if q == 7:
+                run.text = f"A{q}: {data[f'R{number}A{q}']}"
+            else:
+                run.text = f"A{q}: {data[f'R{number}A{q}']}\n"
+            run.font.bold = True
+            run.font.size = Pt(36)
+            run.font.color.theme_color = MSO_THEME_COLOR.ACCENT_1
 
 def build_quiz(template, data):
     global bumpers
