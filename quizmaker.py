@@ -2,7 +2,7 @@ import csv
 import sys
 
 from pptx import Presentation
-from pptx.dml.color import RGBColor
+from pptx.enum.dml import MSO_THEME_COLOR
 
 TITLE = 0
 RULES = 1
@@ -23,8 +23,7 @@ def import_questions(infile):
         csvdict = csv.DictReader(csvfile)
         return {"R" + d["Round"] + d["Type"][:1] + d["Number"]: d["Text"] for d in csvdict}
 
-
-def build_round(prs, number, data, audio=False):
+def build_round(prs, number, data, audio=None):
     global bumpers
     slide = prs.slides.add_slide(prs.slide_layouts[ROUND_START])
     slide.placeholders[0].text = f"Round {number}"
@@ -48,41 +47,40 @@ def build_round(prs, number, data, audio=False):
         slide = prs.slides.add_slide(prs.slide_layouts[ANSWERS_1])
         slide.placeholders[0].text = f"Round {number} Answers"
         tf = slide.placeholders[10].text_frame
-        tf.paragraphs[0].text = f"Q1: {data[f'R{number}Q1']}"
-        p = tf.add_paragraph()
-        run = p.add_run()
-        run.text = f"A1: {data[f'R{number}A1']}"
-        run.font.bold = True
-        run.font.color.rgb = RGBColor(25, 217, 203)
-        for q in range(2, 5):
+        for q in range(1, 5):
+            if q == 1:
+                tf.paragraphs[0].text = f"Q{q}: {data[f'R{number}Q{q}']}"
+            else:
+                p = tf.add_paragraph()
+                run = p.add_run()
+                run.text = f"Q{q}: {data[f'R{number}Q{q}']}"
             p = tf.add_paragraph()
             run = p.add_run()
-            run.text = f"Q{q}: {data[f'R{number}Q{q}']}"
-            p = tf.add_paragraph()
-            run = p.add_run()
-            run.text = f"A{q}: {data[f'R{number}A{q}']}"
+            if q == 4:
+                run.text = f"A{q}: {data[f'R{number}A{q}']}"
+            else:
+                run.text = f"A{q}: {data[f'R{number}A{q}']}\n"
             run.font.bold = True
-            run.font.color.rgb = RGBColor(25, 217, 203)
+            run.font.color.theme_color = MSO_THEME_COLOR.ACCENT_1
         # Answers 5-7
         slide = prs.slides.add_slide(prs.slide_layouts[ANSWERS_2])
         slide.placeholders[0].text = f"Round {number} Answers (cont.)"
         tf = slide.placeholders[10].text_frame
-        tf.paragraphs[0].text = f"Q5: {data[f'R{number}Q5']}"
-        p = tf.add_paragraph()
-        run = p.add_run()
-        run.text = f"A5: {data[f'R{number}A5']}"
-        run.font.bold = True
-        run.font.color.rgb = RGBColor(25, 217, 203)
-        for q in range(6, 8):
+        for q in range(5, 8):
+            if q == 5:
+                tf.paragraphs[0].text = f"Q{q}: {data[f'R{number}Q{q}']}"
+            else:
+                p = tf.add_paragraph()
+                run = p.add_run()
+                run.text = f"Q{q}: {data[f'R{number}Q{q}']}"
             p = tf.add_paragraph()
             run = p.add_run()
-            run.text = f"Q{q}: {data[f'R{number}Q{q}']}"
-            p = tf.add_paragraph()
-            run = p.add_run()
-            run.text = f"A{q}: {data[f'R{number}A{q}']}"
+            if q == 7:
+                run.text = f"A{q}: {data[f'R{number}A{q}']}"
+            else:
+                run.text = f"A{q}: {data[f'R{number}A{q}']}\n"
             run.font.bold = True
-            run.font.color.rgb = RGBColor(25, 217, 203)
-
+            run.font.color.theme_color = MSO_THEME_COLOR.ACCENT_1
 
 def build_quiz(template, data):
     global bumpers
