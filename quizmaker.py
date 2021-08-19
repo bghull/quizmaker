@@ -45,6 +45,10 @@ def build_round(prs, number, data, audio=None):
     else:
         # Questions
         for q in range(1, 8):
+            try:
+                data[f"R{number}Q{q}"]["Text"]
+            except KeyError:
+                data[f"R{number}Q{q}"] = {"Text": "(No question provided)", "Notes": ""}
             slide = prs.slides.add_slide(prs.slide_layouts[QUESTION])
             slide.placeholders[0].text = f"Question {q}"
             slide.placeholders[10].text = data[f"R{number}Q{q}"]["Text"]
@@ -121,7 +125,7 @@ def build_round(prs, number, data, audio=None):
                 run = p.add_run()
                 run.text = f"A{q}: {a_notes}"
 
-def build_quiz(template, data):
+def build_quiz(template, data, audio=None):
     global bumpers
     bumpers = [BUMPER_1, BUMPER_4, BUMPER_3, BUMPER_2, BUMPER_1]
     prs = Presentation(template)
@@ -129,7 +133,10 @@ def build_quiz(template, data):
     prs.slides.add_slide(prs.slide_layouts[RULES])
     build_round(prs, 1, all_data)
     build_round(prs, 2, all_data)
-    build_round(prs, 3, all_data, audio=True)
+    if audio:
+        build_round(prs, 3, all_data, audio=True)
+    else:
+        build_round(prs, 3, all_data)
     build_round(prs, 4, all_data)
     build_round(prs, 5, all_data)
     prs.slides.add_slide(prs.slide_layouts[CLOSER])

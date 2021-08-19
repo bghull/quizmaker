@@ -19,6 +19,7 @@ def form():
 def convert():
     #pattern from https://flask.palletsprojects.com/en/2.0.x/patterns/fileuploads/
     raw_file = request.files['data_file']
+    audio = bool(request.form.get("r3audio"))
     if raw_file and raw_file.filename.endswith(".csv"):
         pass
     else:
@@ -27,7 +28,7 @@ def convert():
     raw_file.save(HOMEDIR / "uploads" / filename)
 
     quizfile = f"{filename[:filename.find('.csv')]}.pptx"
-    quiz = quizmaker.build_quiz(HOMEDIR / "static/pptx_template.pptx", HOMEDIR / "uploads" / filename)
+    quiz = quizmaker.build_quiz(HOMEDIR / "static/pptx_template.pptx", HOMEDIR / "uploads" / filename, audio=audio)
     quiz.save(HOMEDIR / "output" / quizfile)
 
     return send_from_directory(HOMEDIR / "output", quizfile, as_attachment=True)
