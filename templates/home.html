@@ -15,14 +15,24 @@
         </ul>
         <br>
         <br>
-        <form action="/download" method="post" enctype="multipart/form-data">
-            <input type="file" name="data_file">
-            <input type="submit" value="Submit">
-            <div>
+        <select id="sheet" name="sheet" form="sheetform">
+            {% for sheet in sheets %}
+                <option value="{{sheet}}">{{sheet}}</option>
+            {% endfor %}
+        </select>
+        <form id="sheetform" action="/sheet" method="POST">
+            <input type="submit" value="Load Sheet">
             <input type="checkbox" id="r3audio" name="r3audio" checked>
             <label for="r3audio">Audio Round 3?</label>
-            </div>
         </form>
+        <!--<form action="/download" method="POST" enctype="multipart/form-data">-->
+        <!--    <input type="file" name="data_file">-->
+        <!--    <input type="submit" value="Submit">-->
+        <!--    <div>-->
+        <!--    <input type="checkbox" id="r3audio" name="r3audio" checked>-->
+        <!--    <label for="r3audio">Audio Round 3?</label>-->
+        <!--    </div>-->
+        <!--</form>-->
         <br>
         <h2>Changelog:</h2>
         <ul>

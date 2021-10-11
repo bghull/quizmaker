@@ -17,8 +17,10 @@ BUMPER_3 = 9
 BUMPER_4 = 10
 CLOSER = 11
 
+def import_sheet(worksheet_values):
+    return {"R" + l[1] + l[2][:1] + l[3]: {"Text": l[4], "Notes": l[5]} for l in worksheet_values[1:]}
 
-def import_questions(infile):
+def import_csv(infile):
     with open(infile, newline="", encoding="utf-8-sig") as csvfile:
         csvdict = csv.DictReader(csvfile)
         return {"R" + d["Round"] + d["Type"][:1] + d["Number"]: {"Text": d["Text"], "Notes": d["Notes"]} for d in csvdict}
@@ -125,11 +127,14 @@ def build_round(prs, number, data, audio=None):
                 run = p.add_run()
                 run.text = f"A{q}: {a_notes}"
 
-def build_quiz(template, data, audio=None):
+def build_quiz(template, data, audio=None, sheet=None):
     global bumpers
     bumpers = [BUMPER_1, BUMPER_4, BUMPER_3, BUMPER_2, BUMPER_1]
     prs = Presentation(template)
-    all_data = import_questions(data)
+    if sheet:
+        all_data = import_sheet(data)
+    else:
+        all_data = import_csv(data)
     prs.slides.add_slide(prs.slide_layouts[RULES])
     build_round(prs, 1, all_data)
     build_round(prs, 2, all_data)
