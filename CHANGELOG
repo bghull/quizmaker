@@ -1,4 +1,9 @@
 {
+  "2021-10-12": [
+    {
+      "Replaced CSV download/upload steps with import directly from Google Sheets.": "https://github.com/bghull/quizmaker/issues/5"
+    }
+  ],
   "2021-08-20": [
     {
       "Added a checkbox for 'Audio Round 3?'. If selected, question rows in the .csv are skipped, question slides are not inserted, and all answers are presented on a single slide.": "https://github.com/bghull/quizmaker/issues/4"
