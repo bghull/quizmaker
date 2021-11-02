@@ -1,5 +1,7 @@
 # Quizmaker
 
+![Quizmaker process flow](./flow.png)
+
 A workflow automation tool for the creation of pub trivia slide decks. Quizmaker inserts text from a Google Sheet into a PowerPoint template file while handling slide creation (round headers, questions/answers, promotional bumpers), text formatting, and file management, all behind a dead-simple web interface.
 
 A test environment (including dummy data) can be found at https://vml.pythonanywhere.com. Test env may be non-functional during active development.
